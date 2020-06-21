@@ -90,8 +90,9 @@ func AI(paddle *Paddle, ball *Ball, elapsedTime float32) {
 	var isTouchingTop bool = (paddle.Position.Y - halfHeight) <= 0
 	var isTouchingBottom bool = (paddle.Position.Y + halfHeight) >= float32(WindowHeight)
 	var vision = float32(WindowHeight / 6)
+	var reach = (WindowWidth / 12)
 
-	if int32(ball.Position.X) > (WindowWidth / 12) {
+	if int32(ball.Position.X) > reach {
 		if (ball.Position.Y <= (centre-vision) || ball.Position.Y < paddle.Position.Y) && (!isTouchingTop || isTouchingBottom) {
 			paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
 		} else if (ball.Position.Y >= (centre+vision) || ball.Position.Y > paddle.Position.Y) && (!isTouchingBottom || isTouchingTop) {
