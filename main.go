@@ -65,7 +65,7 @@ func main() {
 		case game.Playing:
 			player.Update(keyboard, frameElapsed)
 			ball.Update(&player, &computer, frameElapsed)
-			game.AI(&computer, &ball)
+			game.AI(&computer, &ball, frameElapsed)
 
 			break
 		}

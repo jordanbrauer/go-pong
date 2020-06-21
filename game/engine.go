@@ -84,8 +84,26 @@ func Lerp(a, b, distance float32) float32 {
 }
 
 // AI is an unbeatble computer controlled player.
-func AI(paddle *Paddle, ball *Ball) {
-	paddle.Position.Y = ball.Position.Y
+func AI(paddle *Paddle, ball *Ball, elapsedTime float32) {
+	var centre = Centre().Y
+	var halfHeight = paddle.Height / 2
+	var isTouchingTop bool = (paddle.Position.Y - halfHeight) <= 0
+	var isTouchingBottom bool = (paddle.Position.Y + halfHeight) >= float32(WindowHeight)
+	var vision = float32(WindowHeight / 6)
+
+	if int32(ball.Position.X) > (WindowWidth / 12) {
+		if (ball.Position.Y <= (centre-vision) || ball.Position.Y < paddle.Position.Y) && (!isTouchingTop || isTouchingBottom) {
+			paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
+		} else if (ball.Position.Y >= (centre+vision) || ball.Position.Y > paddle.Position.Y) && (!isTouchingBottom || isTouchingTop) {
+			paddle.Position.Y += paddle.Velocity.Y * elapsedTime
+		}
+	} else if paddle.Position.Y != centre {
+		if paddle.Position.Y > centre && !isTouchingTop {
+			paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
+		} else if !isTouchingBottom {
+			paddle.Position.Y += paddle.Velocity.Y * elapsedTime
+		}
+	}
 }
 
 // Window is a convenience method for creating new windows using SDL2.
