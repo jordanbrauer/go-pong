@@ -32,29 +32,20 @@ func (paddle *Paddle) Draw(pixels []byte) {
 
 // Update will receive input from the user and update the paddle's state to
 // reflect it's new position on screen when it is drawn.
-func (paddle *Paddle) Update(keyboard []uint8, elapsedTime float32) {
-
-	var halfHeight = paddle.Height / 2
-	var isTouchingTop bool = (paddle.Position.Y - halfHeight) <= 0
-	var isTouchingBottom bool = (paddle.Position.Y + halfHeight) >= float32(WindowHeight)
-
-	if 0 != keyboard[sdl.SCANCODE_UP] && !isTouchingTop {
+func (paddle *Paddle) Update(elapsedTime float32) {
+	if IsKeyPressed(sdl.SCANCODE_UP) && !paddle.isTouchingTop() {
 		paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
 	}
 
-	if 0 != keyboard[sdl.SCANCODE_DOWN] && !isTouchingBottom {
+	if IsKeyPressed(sdl.SCANCODE_DOWN) && !paddle.isTouchingBottom() {
 		paddle.Position.Y += paddle.Velocity.Y * elapsedTime
 	}
 
-	var halfWidth = paddle.Width / 2
-	var isTouchingLeft bool = (paddle.Position.X - halfWidth) <= 0
-	var isTouchingRight bool = (paddle.Position.X + halfWidth) >= float32(WindowWidth)
-
-	if 0 != keyboard[sdl.SCANCODE_RIGHT] && !isTouchingRight {
+	if IsKeyPressed(sdl.SCANCODE_RIGHT) && !paddle.isTouchingRight() {
 		paddle.Position.X += paddle.Velocity.X * elapsedTime
 	}
 
-	if 0 != keyboard[sdl.SCANCODE_LEFT] && !isTouchingLeft {
+	if IsKeyPressed(sdl.SCANCODE_LEFT) && !paddle.isTouchingLeft() {
 		paddle.Position.X -= paddle.Velocity.X * elapsedTime
 	}
 }
@@ -62,4 +53,20 @@ func (paddle *Paddle) Update(keyboard []uint8, elapsedTime float32) {
 // Goal will update the paddle player's score for the next render.
 func (paddle *Paddle) Goal() {
 	paddle.Score.Update()
+}
+
+func (paddle *Paddle) isTouchingTop() bool {
+	return 0.0 >= (paddle.Position.Y - (paddle.Height / 2.0))
+}
+
+func (paddle *Paddle) isTouchingBottom() bool {
+	return float32(WindowHeight) <= (paddle.Position.Y + (paddle.Height / 2.0))
+}
+
+func (paddle *Paddle) isTouchingLeft() bool {
+	return 0.0 >= (paddle.Position.X - (paddle.Width / 2.0))
+}
+
+func (paddle *Paddle) isTouchingRight() bool {
+	return float32(WindowWidth) <= (paddle.Position.X + (paddle.Width / 2.0))
 }

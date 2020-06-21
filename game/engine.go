@@ -24,9 +24,6 @@ const (
 	Playing
 )
 
-// State is the current state of the game.
-var State = Waiting
-
 const (
 	// BallRadius determines the total size of the pong ball.
 	BallRadius float32 = 10
@@ -66,6 +63,10 @@ const (
 	// WindowWidth is the default/assigned width of the game window, in pixels.
 	WindowWidth int32 = 800
 )
+
+// State is the current state of the game.
+var State = Waiting
+var keyboard = sdl.GetKeyboardState()
 
 // Abort handles an error by checking for a nil value and panicing otherwise.
 func Abort(caught error) {
@@ -218,6 +219,20 @@ func White() entity.Colour {
 		Red:   255,
 		Green: 255,
 		Blue:  255,
+	}
+}
+
+// IsKeyPressed checks if the given SDL keyboard scancode is actively being held
+// or was pressed by the user.
+func IsKeyPressed(scancode int) bool {
+	return 0 != keyboard[scancode]
+}
+
+// WaitForPlayer will transition the game State from Waiting to Playing when the
+// user hits the space bar key.
+func WaitForPlayer() {
+	if IsKeyPressed(sdl.SCANCODE_SPACE) && Waiting == State {
+		State = Playing
 	}
 }
 

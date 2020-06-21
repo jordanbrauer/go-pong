@@ -34,7 +34,6 @@ func main() {
 		&computer.Score,
 		&ball,
 	}
-	var keyboard = sdl.GetKeyboardState()
 	var frameStart time.Time
 	var frameElapsed float32
 	var running = true
@@ -57,13 +56,11 @@ func main() {
 
 		switch game.State {
 		case game.Waiting:
-			if 0 != keyboard[sdl.SCANCODE_SPACE] {
-				game.State = game.Playing
-			}
+			game.WaitForPlayer()
 
 			break
 		case game.Playing:
-			player.Update(keyboard, frameElapsed)
+			player.Update(frameElapsed)
 			ball.Update(&player, &computer, frameElapsed)
 			game.AI(&computer, &ball, frameElapsed)
 
