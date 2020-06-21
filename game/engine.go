@@ -86,24 +86,13 @@ func Lerp(a, b, distance float32) float32 {
 
 // AI is an unbeatble computer controlled player.
 func AI(paddle *Paddle, ball *Ball, elapsedTime float32) {
-	var centre = Centre().Y
-	var halfHeight = paddle.Height / 2
-	var isTouchingTop bool = (paddle.Position.Y - halfHeight) <= 0
-	var isTouchingBottom bool = (paddle.Position.Y + halfHeight) >= float32(WindowHeight)
-	var vision = float32(WindowHeight / 6)
-	var reach = (WindowWidth / 12)
+	var reach = (WindowWidth / 2)
 
 	if int32(ball.Position.X) > reach {
-		if (ball.Position.Y <= (centre-vision) || ball.Position.Y < paddle.Position.Y) && (!isTouchingTop || isTouchingBottom) {
-			paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
-		} else if (ball.Position.Y >= (centre+vision) || ball.Position.Y > paddle.Position.Y) && (!isTouchingBottom || isTouchingTop) {
-			paddle.Position.Y += paddle.Velocity.Y * elapsedTime
-		}
-	} else if paddle.Position.Y != centre {
-		if paddle.Position.Y > centre && !isTouchingTop {
-			paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
-		} else if !isTouchingBottom {
-			paddle.Position.Y += paddle.Velocity.Y * elapsedTime
+		if (ball.Position.Y < paddle.Position.Y) && (!paddle.IsTouchingTop() || paddle.IsTouchingBottom()) {
+			paddle.Position.Y -= (paddle.Velocity.Y - 80) * elapsedTime
+		} else if (ball.Position.Y > paddle.Position.Y) && (!paddle.IsTouchingBottom() || paddle.IsTouchingTop()) {
+			paddle.Position.Y += (paddle.Velocity.Y - 80) * elapsedTime
 		}
 	}
 }

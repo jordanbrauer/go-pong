@@ -33,19 +33,19 @@ func (paddle *Paddle) Draw(pixels []byte) {
 // Update will receive input from the user and update the paddle's state to
 // reflect it's new position on screen when it is drawn.
 func (paddle *Paddle) Update(elapsedTime float32) {
-	if IsKeyPressed(sdl.SCANCODE_UP) && !paddle.isTouchingTop() {
+	if IsKeyPressed(sdl.SCANCODE_UP) && !paddle.IsTouchingTop() {
 		paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
 	}
 
-	if IsKeyPressed(sdl.SCANCODE_DOWN) && !paddle.isTouchingBottom() {
+	if IsKeyPressed(sdl.SCANCODE_DOWN) && !paddle.IsTouchingBottom() {
 		paddle.Position.Y += paddle.Velocity.Y * elapsedTime
 	}
 
-	if IsKeyPressed(sdl.SCANCODE_RIGHT) && !paddle.isTouchingRight() {
+	if IsKeyPressed(sdl.SCANCODE_RIGHT) && !paddle.IsTouchingRight() {
 		paddle.Position.X += paddle.Velocity.X * elapsedTime
 	}
 
-	if IsKeyPressed(sdl.SCANCODE_LEFT) && !paddle.isTouchingLeft() {
+	if IsKeyPressed(sdl.SCANCODE_LEFT) && !paddle.IsTouchingLeft() {
 		paddle.Position.X -= paddle.Velocity.X * elapsedTime
 	}
 }
@@ -55,18 +55,18 @@ func (paddle *Paddle) Goal() {
 	paddle.Score.Update()
 }
 
-func (paddle *Paddle) isTouchingTop() bool {
+func (paddle *Paddle) IsTouchingTop() bool {
 	return 0.0 >= (paddle.Position.Y - (paddle.Height / 2.0))
 }
 
-func (paddle *Paddle) isTouchingBottom() bool {
+func (paddle *Paddle) IsTouchingBottom() bool {
 	return float32(WindowHeight) <= (paddle.Position.Y + (paddle.Height / 2.0))
 }
 
-func (paddle *Paddle) isTouchingLeft() bool {
+func (paddle *Paddle) IsTouchingLeft() bool {
 	return 0.0 >= (paddle.Position.X - (paddle.Width / 2.0))
 }
 
-func (paddle *Paddle) isTouchingRight() bool {
+func (paddle *Paddle) IsTouchingRight() bool {
 	return float32(WindowWidth) <= (paddle.Position.X + (paddle.Width / 2.0))
 }
