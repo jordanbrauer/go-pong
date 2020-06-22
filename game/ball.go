@@ -42,44 +42,47 @@ func (ball *Ball) Draw(pixels []byte) {
 // Update will change the position of the ball based on it's current position in
 // the game world.
 func (ball *Ball) Update(paddleLeft *Paddle, paddleRight *Paddle, elapsedTime float32) {
-	// 1. check for left paddle collision physics
-	if (ball.Position.X - ball.Radius) < (paddleLeft.Position.X + (paddleLeft.Width / 2)) {
-		if ball.Position.Y > paddleLeft.Position.Y-paddleLeft.Height/2 && ball.Position.Y < paddleLeft.Position.Y+paddleLeft.Height/2 {
-			ball.Velocity.X = -ball.Velocity.X // minimum translation vector
-			ball.Position.X = paddleLeft.Position.X + (paddleLeft.Width / 2.0) + ball.Radius
-
-			if ball.Position.Y <= paddleLeft.Position.Y-(paddleLeft.Height/4.0) {
-				ball.Velocity.Y = -ball.Velocity.Y
-			} else if ball.Position.Y >= paddleLeft.Position.Y+(paddleLeft.Height/4.0) {
-				ball.Velocity.Y = -ball.Velocity.Y
-			}
-		}
-	}
-
 	var exitScreenRight bool = (ball.Position.X + ball.Radius) >= float32(WindowWidth)
-
-	if exitScreenRight {
-		paddleLeft.Goal()
-	}
-
-	// 2. check for right paddle collision physics
-	if (ball.Position.X + ball.Radius) > (paddleRight.Position.X + (paddleRight.Width / 2)) {
-		if ball.Position.Y > paddleRight.Position.Y-paddleRight.Height/2 && ball.Position.Y < paddleRight.Position.Y+paddleLeft.Height/2 {
-			ball.Velocity.X = -ball.Velocity.X // minimum translation vector
-			ball.Position.X = paddleRight.Position.X - (paddleRight.Width / 2.0) - ball.Radius
-
-			if ball.Position.Y <= paddleRight.Position.Y-(paddleRight.Height/4.0) {
-				ball.Velocity.Y = -ball.Velocity.Y
-			} else if ball.Position.Y >= paddleRight.Position.Y+(paddleRight.Height/4.0) {
-				ball.Velocity.Y = -ball.Velocity.Y
-			}
-		}
-	}
-
 	var exitScreenLeft bool = (int(ball.Position.X - ball.Radius)) <= 0
 
-	if exitScreenLeft {
-		paddleRight.Goal()
+	// 1. check for left paddle collision physics
+	if nil != paddleLeft {
+		if (ball.Position.X - ball.Radius) < (paddleLeft.Position.X + (paddleLeft.Width / 2)) {
+			if ball.Position.Y > paddleLeft.Position.Y-paddleLeft.Height/2 && ball.Position.Y < paddleLeft.Position.Y+paddleLeft.Height/2 {
+				ball.Velocity.X = -ball.Velocity.X // minimum translation vector
+				ball.Position.X = paddleLeft.Position.X + (paddleLeft.Width / 2.0) + ball.Radius
+
+				if ball.Position.Y <= paddleLeft.Position.Y-(paddleLeft.Height/4.0) {
+					ball.Velocity.Y = -ball.Velocity.Y
+				} else if ball.Position.Y >= paddleLeft.Position.Y+(paddleLeft.Height/4.0) {
+					ball.Velocity.Y = -ball.Velocity.Y
+				}
+			}
+		}
+
+		if exitScreenRight {
+			paddleLeft.Goal()
+		}
+	}
+
+	if nil != paddleRight {
+		// 2. check for right paddle collision physics
+		if (ball.Position.X + ball.Radius) > (paddleRight.Position.X + (paddleRight.Width / 2)) {
+			if ball.Position.Y > paddleRight.Position.Y-paddleRight.Height/2 && ball.Position.Y < paddleRight.Position.Y+paddleLeft.Height/2 {
+				ball.Velocity.X = -ball.Velocity.X // minimum translation vector
+				ball.Position.X = paddleRight.Position.X - (paddleRight.Width / 2.0) - ball.Radius
+
+				if ball.Position.Y <= paddleRight.Position.Y-(paddleRight.Height/4.0) {
+					ball.Velocity.Y = -ball.Velocity.Y
+				} else if ball.Position.Y >= paddleRight.Position.Y+(paddleRight.Height/4.0) {
+					ball.Velocity.Y = -ball.Velocity.Y
+				}
+			}
+		}
+
+		if exitScreenLeft {
+			paddleRight.Goal()
+		}
 	}
 
 	// 3. Update ball position and game state
