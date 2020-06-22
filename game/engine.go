@@ -86,13 +86,30 @@ func Lerp(a, b, distance float32) float32 {
 
 // AI is an unbeatble computer controlled player.
 func AI(paddle *Paddle, ball *Ball, elapsedTime float32) {
-	var reach = (WindowWidth / 2)
+	if ball.Position.X <= (ball.Radius * 2) {
+		return
+	}
 
-	if int32(ball.Position.X) > reach {
-		if (ball.Position.Y < paddle.Position.Y) && (!paddle.IsTouchingTop() || paddle.IsTouchingBottom()) {
-			paddle.Position.Y -= (paddle.Velocity.Y - 80) * elapsedTime
-		} else if (ball.Position.Y > paddle.Position.Y) && (!paddle.IsTouchingBottom() || paddle.IsTouchingTop()) {
-			paddle.Position.Y += (paddle.Velocity.Y - 80) * elapsedTime
+	var distance float32 = -(ball.Position.X - paddle.Position.X)
+	var ghost = Ball{
+		Position:   Position(ball.Position.X, ball.Position.Y),
+		Dimensions: Dimension(0, 0, ball.Radius),
+		Velocity:   Velocity(BallVelocity, BallVelocity),
+	}
+
+	for distance > 50 {
+		ghost.Update(nil, nil, elapsedTime)
+
+		distance = -(ghost.Position.X - paddle.Position.X)
+	}
+
+	if (ball.Position.Y < paddle.Position.Y) && (!paddle.IsTouchingTop() || paddle.IsTouchingBottom()) {
+		if ghost.Position.Y < paddle.Position.Y {
+			paddle.Position.Y -= paddle.Velocity.Y * elapsedTime
+		}
+	} else if (ball.Position.Y > paddle.Position.Y) && (!paddle.IsTouchingBottom() || paddle.IsTouchingTop()) {
+		if ghost.Position.Y > paddle.Position.Y {
+			paddle.Position.Y += paddle.Velocity.Y * elapsedTime
 		}
 	}
 }
